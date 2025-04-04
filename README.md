@@ -14,6 +14,8 @@ A simple C++/OpenGL application playing around with Bounding Volume Hierarchies 
 |---------|---------|----------|
 | ![Depth 1](depth1.png) | ![Depth 8](depth8.png) | ![Depth 16](depth16.png) |
 
+Model: [Rungholt](https://casual-effects.com/data/) (© [kescha](http://www.planetminecraft.com/project/neu-rungholt/))
+
 ## Controls
 
 - **WASD**: Move
