@@ -1,5 +1,7 @@
 .vscode/
 imgui.ini
 
+*/**.o
+
 assets/
 !assets/dragon.obj
