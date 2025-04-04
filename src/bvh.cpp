@@ -21,6 +21,7 @@ int BVH::buildBVH(int start, int end, int depth) {
     node.left = -1;
     node.right = -1;
     node.triangleIndex = -1;
+    node.triangleCount = 0;
 
     glm::vec3 minBounds = glm::vec3(FLT_MAX);
     glm::vec3 maxBounds = glm::vec3(-FLT_MAX);
@@ -37,6 +38,7 @@ int BVH::buildBVH(int start, int end, int depth) {
 
     if (depth >= maxDepth || (end - start) <= 10) {
         node.triangleIndex = start;
+        node.triangleCount = end - start;
         node.depth = depth;
         nodes.push_back(node);
         return nodes.size() - 1;
@@ -60,6 +62,7 @@ int BVH::buildBVH(int start, int end, int depth) {
 
     if (mid == start || mid == end) {
         node.triangleIndex = start;
+        node.triangleCount = end - start;
         nodes.push_back(node);
         node.depth = depth;
         return nodes.size() - 1;

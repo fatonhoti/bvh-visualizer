@@ -25,6 +25,8 @@ const Light lights[6] = {
 
 void main() {
     const vec3 norm = normalize(Normal);
+    FragColor = vec4(norm*0.5+0.5, 1.0);
+    return;
 
     vec3 diffuse = vec3(0.0);
     for (int i = 0; i < 6; i++) {

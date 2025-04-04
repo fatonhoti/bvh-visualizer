@@ -17,7 +17,7 @@ struct BVH {
         AABB bbox;
         int left, right;
         int triangleIndex;
-        int triangleIndexEnd;
+        int triangleCount;
         int depth;
     };
 

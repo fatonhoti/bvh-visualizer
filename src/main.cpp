@@ -67,6 +67,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+    if (key == GLFW_KEY_V && action == GLFW_PRESS) {
+        static bool wireframe_mode = false;
+        wireframe_mode = !wireframe_mode;
+        glPolygonMode(GL_FRONT_AND_BACK, wireframe_mode ? GL_LINE : GL_FILL);
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -120,6 +126,8 @@ int main() {
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(openglDebugCallback, nullptr);
 
+    glEnable(GL_CULL_FACE);
+
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glEnable(GL_DEPTH_TEST);
 
@@ -147,8 +155,15 @@ int main() {
 
     int depth = 4;
 
-    Mesh mesh("assets/dragon.obj");
+    Mesh mesh("assets/rungholt.obj");
     BVH bvh(mesh, depth);
+
+    int avg_tris = 0;
+    for (const auto& node : bvh.nodes) {
+        if (node.triangleCount > 0)
+            avg_tris += node.triangleCount;
+    }
+    avg_tris /= bvh.numInstances;
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
@@ -171,9 +186,17 @@ int main() {
         ImGui::Text("Max depth %d", bvh.maxDepth);
         ImGui::Text("# of nodes %zu", bvh.nodes.size());
         ImGui::Text("# of leaves = %d", bvh.numInstances);
+        ImGui::Text("avg # of tris/leaf = %d", avg_tris);
         if (ImGui::SliderInt("Depth", &depth, 1, 16)) {
             bvh.rebuild(depth);
+            avg_tris = 0;
+            for (const auto& node : bvh.nodes) {
+                if (node.triangleCount > 0)
+                    avg_tris += node.triangleCount;
+            }
+            avg_tris /= bvh.numInstances;
         }
+        ImGui::SliderFloat("Movement speed", &camera.m_MovementSpeed, 1.0f, 50.0f);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
